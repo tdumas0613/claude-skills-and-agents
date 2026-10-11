@@ -1,11 +1,13 @@
 ---
 name: review-agent-docs
-description: Review agent instruction files (CLAUDE.md, AGENTS.md, skills, subagent definitions, slash commands) for stale facts, duplication, misplaced content, contradictions, missing lessons and context cost, then propose what to update, remove or move. Use when asked to review, audit, tidy or slim down any of them, or after a refactor or rename.
+description: Review agent instruction files (CLAUDE.md, AGENTS.md, skills, subagent definitions, slash commands) for stale facts, duplication, misplaced content, contradictions, missing lessons and context cost, then propose what to update, remove or move. Use when asked to review, audit, tidy or slim down any of them, after a refactor or rename, or when the user corrects you or settles a decision and it needs recording in the right file.
 ---
 
 # Reviewing agent instruction files
 
 Agent instruction files decay quietly. Code gets renamed, commands change, lessons pile up in the wrong place, and the same rule ends up in three files that slowly disagree. Every word in an always-loaded file costs context on every turn. The aim of a review is files that are **true**, **in the right place**, **said once** and **as short as they can be while still changing behavior**.
+
+**Recording one correction or decision** doesn't need a review: choose its home from the table in step 3, check that home doesn't already say it (or contradict it), and add it in the same change as the fix it came from.
 
 ## 1. Take inventory and note what loads when
 
