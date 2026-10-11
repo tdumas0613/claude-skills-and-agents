@@ -1,0 +1,4 @@
+#!/bin/sh
+# Rebuilds each skill's upload zip from what this commit stages, and adds it to the commit.
+# Turn it on once per clone: git config core.hooksPath .githooks
+exec node scripts/build-skill-zips.mjs --stage
