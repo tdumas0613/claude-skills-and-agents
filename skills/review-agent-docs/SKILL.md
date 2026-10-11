@@ -31,12 +31,18 @@ So the cheapest fix for a long CLAUDE.md is usually moving content down a row, n
 
 ## 2. Check every claim against the repo
 
-Stale facts are the most common defect, and the most harmful, because the agent acts on them confidently.
+Stale facts are the most common defect, and the most harmful, because the agent acts on them confidently. Checking them means reading every file and grepping the code, so hand this step to a subagent (the built-in general-purpose agent): its reading stays out of the main conversation, and a reviewer that didn't write the docs misses less. If subagents aren't available, do it yourself.
 
-- Run `node <this skill's dir>/scripts/check_refs.mjs <repo root>` (add file paths after the root to check others, such as the README). It lists backticked paths and `npm run` commands that no longer exist. A clean run only means nothing is obviously broken.
-- Then read each file and verify what the script can't: function and field names (grep them), described behavior, numbers (timings, counts, thresholds), flags and defaults. Pay most attention to anything touched by recent commits: `git log --since=<date the doc last changed> --stat` shows where to look.
-- Watch for **rationale that expired**. A rule like "keep X free of imports" may have existed only because of a tool that's gone. Keep the rule only if its reason still holds.
-- Watch for **contradictions** between files, or within one (one section says to run the whole test suite before committing, another says the fast subset is enough).
+The subagent starts without this conversation, so its brief carries everything it needs:
+- The repo root, the files from step 1, and the absolute path of this skill's `scripts/check_refs.mjs`.
+- What to check:
+  - Run `node <script path> <repo root>` (add file paths after the root to check others, such as the README). It lists backticked paths and `npm run` commands that no longer exist. A clean run only means nothing is obviously broken.
+  - Read each file and verify what the script can't: function and field names (grep them), described behavior, numbers (timings, counts, thresholds), flags and defaults. Pay most attention to anything touched by recent commits: `git log --since=<date the doc last changed> --stat` shows where to look.
+  - **Rationale that expired**: a rule like "keep X free of imports" that existed only because of a tool that's gone. The rule stays only if its reason still holds.
+  - **Contradictions** between files, or within one (one section says to run the whole test suite before committing, another says the fast subset is enough).
+- What to return: problems only, one line each, with `file:line`, the kind (stale, expired rationale or contradiction), what the doc says and what the repo shows instead. No summary of what's fine, and no edits.
+
+Before proposing a change based on a finding, open the line it cites and confirm it.
 
 ## 3. Put each piece of content in its one right home
 
